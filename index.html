@@ -36,11 +36,11 @@ body {
       flex-wrap: wrap;
       justify-content: space-around;
       align-items: flex-start;
-      margin-top:250px;
+      margin-top:220px;
 	  padding-left:400px;
 	  padding-right:200px;
 	  
-      gap: 0px;
+      gap: 100px;
     }
 
     .panel {
@@ -91,8 +91,8 @@ body {
     }
 
     .item img {
-      width: 85px;
-      height: 65px;
+      width: 125px;
+      height: 100px;
       margin-bottom: 0px;
     }
 
@@ -110,8 +110,8 @@ body {
     }
 
     .item .content span {
-      font-size: 26px;
-	  height: 55px;
+      font-size: 36px;
+	  height: 90px;
       margin: 5px 0;
       text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
     }
@@ -211,6 +211,43 @@ body {
   box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 
 }
+#musicContainer {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid green;
+  border-radius: 10px;
+  padding: 5px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 5x;
+  backdrop-filter: blur(4px);
+}
+
+#musicBtn {
+  padding: 6px 12px;
+  font-size: 10px;
+  background: #fff;
+  color: #28a745;
+  border: 2px solid green;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#musicBtn:hover {
+  background: #28a745;
+  color: #fff;
+}
+
+#volumeControl {
+  width: 50px;
+  cursor: pointer;
+}
+
+
 
   </style>
 </head>
@@ -222,7 +259,7 @@ body {
 
     <div class="panel left" id="leftPanel">
       <h1>BEVERAGE</h1>
-      <div class="item" data-id="energy"><img src="energydrink1.png" alt="energy"></div>
+
       <div class="item" data-id="regicedtea"><img src="regularicedtea1.png" alt="regicedtea"></div>
       <div class="item" data-id="soda"><img src="soda1.png" alt="soda"></div>
 	   <div class="item" data-id="true"><img src="Ttbox1.png" alt="true"></div>
@@ -236,12 +273,7 @@ body {
          
         </div>
       </div>
-      <div class="item" data-id="energy">
-        <div class="content">
-          <span>14 tsp Sugar</span>
-         
-        </div>
-      </div>
+
       <div class="item" data-id="true">
         <div class="content">
           <span>0 tsp Sugar</span>
@@ -265,6 +297,19 @@ body {
     Your browser does not support the video tag.
   </video>
 </div>
+
+<!-- Add this inside <body>, maybe after your videoContainer -->
+<div id="musicContainer">
+  <audio id="bgMusic" loop>
+    <source src="bgmusic.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <button id="musicBtn">BG</button>
+  <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+</div>
+
+
 
   
 
@@ -422,6 +467,29 @@ body {
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+	
+const bgMusic = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+const volumeControl = document.getElementById("volumeControl");
+
+let isPlaying = false;
+
+musicBtn.addEventListener("click", () => {
+  if (isPlaying) {
+    bgMusic.pause();
+    musicBtn.textContent = "▶";
+  } else {
+    bgMusic.play();
+    musicBtn.textContent = "⏸";
+  }
+  isPlaying = !isPlaying;
+});
+
+volumeControl.addEventListener("input", () => {
+  bgMusic.volume = volumeControl.value;
+});
+
+	
   </script>
 </body>
 </html>
