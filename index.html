@@ -12,7 +12,7 @@
 body {
   margin: 0;
   font-family: 'Oswald', sans-serif;
-  background: url('bg.png') no-repeat center center fixed;
+  background: url('bg.png') no-repeat top center fixed;
   background-size: contain;   /* Show the full image */
   background-color: #ffb600;  /* Fills the empty space */
   overflow-x: hidden;
@@ -31,17 +31,57 @@ body {
       z-index: 10;
     }
 
-    #gameContainer {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      align-items: flex-start;
-      margin-top:220px;
-	  padding-left:400px;
-	  padding-right:200px;
-	  
-      gap: 100px;
-    }
+#gameContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-top: 220px;
+  padding-left: 400px;
+  padding-right: 200px;
+  gap: 100px;
+}
+
+/* Tablet (landscape & portrait) */
+@media (max-width: 1024px) {
+  #gameContainer {
+  margin-top:230px;
+  padding-left: 180px;
+  padding-right: 0px;
+    gap: 100px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1180px) {
+  #gameContainer {
+  margin-top:150px;
+  padding-left: 150px;
+  padding-right: 0px;
+  gap: 200px;
+ 
+  }
+  #videoContainer video{
+  
+ 
+ 
+  }
+  
+}
+
+
+/* Mobile phones */
+@media (max-width: 740px) {
+  #gameContainer {
+  margin-top: 100px;
+  padding-left: 200px;
+  padding-right: 200px;
+    gap: 100px;
+    
+  justify-content: center;
+  }
+}
+
 
     .panel {
       width: 10%;
@@ -291,12 +331,12 @@ body {
 
   <button id="switchBtn">I SWITCH</button>
   
-  <div id="videoContainer">
+  <!--div id="videoContainer">
   <video id="pioloVideo" width="600" height="450" controls>
     <source src="Piolo.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
-</div>
+</div-->
 
 <!-- Add this inside <body>, maybe after your videoContainer -->
 <div id="musicContainer">
