@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Sweet Switch Challenge!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+body {
+  margin: 0;
+  font-family: 'Oswald', sans-serif;
+  background: url('bg.png') no-repeat center center fixed;
+  background-size: contain;   /* Show the full image */
+  background-color: #ffb600;  /* Fills the empty space */
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 80px;
+}
+
+
+    #mainHeader {
+      height: 150px;
+      background: url('header.png') no-repeat center center;
+      background-size: cover;
+      border-bottom: 5px solid green;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    #gameContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-items: flex-start;
+      margin-top:250px;
+	  padding-left:400px;
+	  padding-right:200px;
+	  
+      gap: 0px;
+    }
+
+    .panel {
+      width: 10%;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      color: green;
+      margin: 6px 0;
+      text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+    }
+
+    img {
+      max-width: 80%;
+      height: auto;
+      image-rendering: auto;
+    }
+
+    .item {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      font-size: 5px;
+      padding: 4px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(3px);
+      border: 3px solid green;
+      width: 100%;
+    }
+
+    .item:hover {
+      transform: scale(1.03);
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .item.matched {
+      background-color: #d4edda;
+      border-color: #28a745;
+    }
+
+    .item img {
+      width: 85px;
+      height: 65px;
+      margin-bottom: 0px;
+    }
+
+    .item .content {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      justify-content: center;
+    }
+
+    .item .content img {
+      width: 35px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .item .content span {
+      font-size: 26px;
+	  height: 55px;
+      margin: 5px 0;
+      text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+    }
+
+    canvas#lineCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 5;
+      pointer-events: none;
+      touch-action: none;
+    }
+
+    #toast {
+      position: fixed;
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      background: #222;
+      color: #fff;
+      border-radius: 6px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+      font-size: 24px;
+    }
+
+    #toast.show {
+      opacity: 1;
+    }
+
+    #switchBtn {
+      margin: 10px auto;
+      padding: 5px;
+      width: 100px;
+      height: 50px;
+      font-size: 14px;
+      background: #fff;
+      color: #28a745;
+      font-weight: bold;
+      border: 3px solid green;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: block;
+      z-index: 9;
+      position: relative;
+	  left:100px;
+    }
+
+    #switchBtn:hover {
+      background: #28a745;
+      color: #fff;
+    }
+
+    #extraImageContainer {
+      text-align: center;
+      margin: 20px 0;
+      z-index: 7;
+    }
+
+    #extraImageContainer img {
+      max-width: 90%;
+      height: auto;
+      border: 3px solid green;
+      border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    #mainFooter {
+      background: rgba(255, 255, 255, 0.7);
+      color: #1a531b;
+      text-align: center;
+      font-size: 12px;
+      padding: 8px 0;
+      border-top: 3px solid green;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 8;
+      backdrop-filter: blur(4px);
+      font-family: 'Oswald', sans-serif;
+    }
+	
+	#videoContainer {
+   margin-left:475px;
+  margin-top: 50px;
+   
+}
+
+#videoContainer video {
+  width: 600px;
+  height: 450px;
+  border: 5px solid green;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+
+}
+
+  </style>
+</head>
+<body>
+
+  <div id="toast"></div>
+  <div id="gameContainer">
+    <canvas id="lineCanvas"></canvas>
+
+    <div class="panel left" id="leftPanel">
+      <h1>BEVERAGE</h1>
+      <div class="item" data-id="energy"><img src="energydrink1.png" alt="energy"></div>
+      <div class="item" data-id="regicedtea"><img src="regularicedtea1.png" alt="regicedtea"></div>
+      <div class="item" data-id="soda"><img src="soda1.png" alt="soda"></div>
+	   <div class="item" data-id="true"><img src="Ttbox1.png" alt="true"></div>
+    </div>
+
+    <div class="panel right" id="rightPanel">
+      <h1>SUGAR CONTENT</h1>
+      <div class="item" data-id="soda">
+        <div class="content">
+          <span>10 tsp Sugar</span>
+         
+        </div>
+      </div>
+      <div class="item" data-id="energy">
+        <div class="content">
+          <span>14 tsp Sugar</span>
+         
+        </div>
+      </div>
+      <div class="item" data-id="true">
+        <div class="content">
+          <span>0 tsp Sugar</span>
+         
+        </div>
+      </div>
+	  <div class="item" data-id="regicedtea">
+        <div class="content">
+          <span>6 tsp Sugar</span>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="switchBtn">I SWITCH</button>
+  
+  <div id="videoContainer">
+  <video id="pioloVideo" width="600" height="450" controls>
+    <source src="piolo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+  
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+    const canvas = document.getElementById('lineCanvas');
+    const ctx = canvas.getContext('2d');
+    const toast = document.getElementById('toast');
+    const switchBtn = document.getElementById('switchBtn');
+    const leftItems = document.querySelectorAll('#leftPanel .item');
+    const rightItems = document.querySelectorAll('#rightPanel .item');
+    let isDrawing = false;
+    let startEl = null;
+    let startPoint = null;
+    let currentMouse = { x: 0, y: 0 };
+    let matches = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      redrawLines();
+    }
+
+    function showToast(msg, success = true) {
+      toast.innerText = msg;
+      toast.style.background = success ? "#28a745" : "#dc3545";
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 5000);
+    }
+
+    function getCenter(el) {
+      const rect = el.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+    }
+
+    function drawLine(from, to, color = '#28a745') {
+      const headLength = 20;
+      const shorten = 50;
+      const angle = Math.atan2(to.y - from.y, to.x - from.x);
+      const fromX = from.x + shorten * Math.cos(angle);
+      const fromY = from.y + shorten * Math.sin(angle);
+      const toX = to.x - shorten * Math.cos(angle);
+      const toY = to.y - shorten * Math.sin(angle);
+
+      ctx.beginPath();
+      ctx.moveTo(fromX, fromY);
+      ctx.lineTo(toX, toY);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 5;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(toX, toY);
+      ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
+      ctx.lineTo(toX, toY);
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    function redrawLines() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      matches.forEach(match => {
+        drawLine(getCenter(match.left), getCenter(match.right));
+      });
+    }
+
+    function handleStart(x, y) {
+      const clicked = Array.from(leftItems).find(item => {
+        const rect = item.getBoundingClientRect();
+        return (
+          x >= rect.left && x <= rect.right &&
+          y >= rect.top && y <= rect.bottom &&
+          !item.classList.contains('matched')
+        );
+      });
+
+      if (clicked) {
+        isDrawing = true;
+        startEl = clicked;
+        startPoint = getCenter(clicked);
+      }
+    }
+
+    function handleMove(x, y) {
+      if (!isDrawing || !startEl) return;
+      currentMouse = { x, y };
+      redrawLines();
+      drawLine(startPoint, currentMouse, '#007bff');
+    }
+
+    function handleEnd(x, y) {
+      if (!isDrawing || !startEl) return;
+
+      const target = Array.from(rightItems).find(item => {
+        const rect = item.getBoundingClientRect();
+        return (
+          x >= rect.left && x <= rect.right &&
+          y >= rect.top && y <= rect.bottom &&
+          !item.classList.contains('matched')
+        );
+      });
+
+      if (target) {
+        const fromId = startEl.getAttribute('data-id');
+        const toId = target.getAttribute('data-id');
+        if (fromId === toId) {
+          startEl.classList.add('matched');
+          target.classList.add('matched');
+          matches.push({ left: startEl, right: target });
+          showToast("Correct Match! 🎉");
+        } else {
+          showToast("Wrong Match ❌", false);
+        }
+      }
+
+      isDrawing = false;
+      startEl = null;
+      startPoint = null;
+      redrawLines();
+    }
+
+    document.addEventListener('mousedown', (e) => handleStart(e.clientX, e.clientY));
+    document.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
+    document.addEventListener('mouseup', (e) => handleEnd(e.clientX, e.clientY));
+
+    document.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      handleStart(touch.clientX, touch.clientY);
+    });
+    document.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      handleMove(touch.clientX, touch.clientY);
+    });
+    document.addEventListener('touchend', (e) => {
+      const touch = e.changedTouches[0];
+      handleEnd(touch.clientX, touch.clientY);
+    });
+
+    switchBtn.addEventListener('click', () => {
+      showToast("🎉 SWITCH SUCCESSFUL! 🎉 \n   HEALTHIER YOU UNLOCKED!", true);
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+  </script>
+</body>
+</html>
